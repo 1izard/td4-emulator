@@ -13,11 +13,11 @@ ins = assembler.INSTRUCTIONS
 
 
 class TestUnits(unittest.TestCase):
-    def test_assemble_line_for_line_0(self):
+    def test_assemble_line_for_empty_line(self):
         arg = ''
-        actual = assembler.assemble_line(arg)
-        expected = tuple(np.nan for _ in range(8))
-        self.assertEqual(expected, actual)
+        with self.assertRaises(ValueError) as context:
+            assembler.assemble_line(arg)
+        self.assertTrue('Invalid syntax' in str(context.exception))
 
     def test_assemble_line_for_correct_lines(self):
         args = (
@@ -75,13 +75,18 @@ class TestUnits(unittest.TestCase):
         actual = assembler.assemble(arg)
         e = (
             ins['MOV']['A']['B'],
-            tuple(np.nan for _ in range(8)),
             ins['MOV']['B']['Im'] + (True, False, True, False),
             ins['JMP']['Im'] + (True, False, True, False),
         )
         expected = np.array(tuple(t[::-1] for t in e) +
-                            tuple(tuple(np.nan for _ in range(8)) for _ in range(12)))
+                            tuple(tuple(np.nan for _ in range(8)) for _ in range(13)))
         assert_array_equal(expected, actual)
+
+    def test_assemble_for_empty_line(self):
+        arg = os.path.join(os.path.dirname(__file__), 'test_program_empty_line.txt')
+        with self.assertRaises(ValueError) as context:
+            assembler.assemble(arg)
+        self.assertTrue('Invalid syntax: line 2' in str(context.exception))
 
     def test_assemble_for_over(self):
         arg = os.path.join(os.path.dirname(__file__), 'test_program_over.txt')
