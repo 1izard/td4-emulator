@@ -6,12 +6,20 @@ def NOT(x: bool) -> bool:
     return not x
 
 
+def _AND(a: bool, b: bool) -> bool:
+    return a and b
+
+
 def AND(*xs: bool) -> bool:
-    return all(xs)
+    return functools.reduce(_AND, xs)
+
+
+def _OR(a: bool, b: bool) -> bool:
+    return a or b
 
 
 def OR(*xs: bool) -> bool:
-    return any(xs)
+    return functools.reduce(_OR, xs)
 
 
 def NAND(*xs: bool) -> bool:
