@@ -147,6 +147,41 @@ class TestUnits(unittest.TestCase):
         for e, a in zip(expecteds, actuals):
             assert_array_equal(e, a)
 
+    def test_DECODER(self):
+        args = (
+            (utils.bastr2ba('0011')[::-1], False),  # MOV A Im
+            (utils.bastr2ba('0111')[::-1], False),  # MOV B Im
+            (utils.bastr2ba('0001')[::-1], False),  # MOV A B
+            (utils.bastr2ba('0100')[::-1], False),  # MOV B A
+            (utils.bastr2ba('0000')[::-1], False),  # ADD A Im
+            (utils.bastr2ba('0101')[::-1], False),  # ADD B Im
+            (utils.bastr2ba('0010')[::-1], False),  # IN A
+            (utils.bastr2ba('0110')[::-1], False),  # IN B
+            (utils.bastr2ba('1011')[::-1], False),  # OUT Im
+            (utils.bastr2ba('1001')[::-1], False),  # OUT B
+            (utils.bastr2ba('1111')[::-1], False),  # JMP Im
+            (utils.bastr2ba('1110')[::-1], True),  # JNC Im with c = 0; c_flog_ = 1
+            (utils.bastr2ba('1110')[::-1], False),  # JNC Im with c = 1; c_flog_ = 0
+        )
+        actuals = (units.DECODER(*arg) for arg in args)
+        expecteds = (
+            utils.bastr2ba('110111'),  # MOV A Im
+            utils.bastr2ba('111011'),  # MOV B Im
+            utils.bastr2ba('100111'),  # MOV A B
+            utils.bastr2ba('001011'),  # MOV B A
+            utils.bastr2ba('000111'),  # ADD A Im
+            utils.bastr2ba('101011'),  # ADD B Im
+            utils.bastr2ba('010111'),  # IN A
+            utils.bastr2ba('011011'),  # IN B
+            utils.bastr2ba('111101'),  # OUT Im
+            utils.bastr2ba('101101'),  # OUT B
+            utils.bastr2ba('111110'),  # JMP Im
+            utils.bastr2ba('111110'),  # JNC Im with c = 0
+            utils.bastr2ba('111111'),  # JNC Im with c = 1 (xx1111 is OK)
+        )
+        for e, a in zip(expecteds, actuals):
+            assert_array_equal(e, a)
+
 
 if __name__ == '_main__':
     unittest.main()

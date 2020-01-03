@@ -153,3 +153,23 @@ def MUX(a: bool, b: bool,
         Array[bool, 1, 4] -- Selected 4-bit array
     """
     return np.array(tuple(_MUX(a, b, ca[i], cb[i], cc[i], cd[i]) for i in range(4)))
+
+
+def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
+    """Instruction Decoder
+
+    Arguments:
+        op_arr {Array[bool, 1, 4]} -- 4-bit operation code
+        c_flag_ {bool} -- negative carry flag
+
+    Returns:
+        Array[bool, 1, 6] -- [select_a, select_b, load0_, load1_, load2_, load3_]
+    """
+    op0, op1, op2, op3 = op_arr
+    select_a = OR(op0, op3)
+    select_b = op1
+    load0_ = OR(op2, op3)
+    load1_ = OR(NOT(op2), op3)
+    load2_ = NAND(NOT(op2), op3)
+    load3_ = NAND(op2, op3, OR(op0, c_flag_))
+    return np.array((select_a, select_b, load0_, load1_, load2_, load3_))
