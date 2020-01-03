@@ -1,0 +1,2 @@
+MOV A B
+MOV A 1010
