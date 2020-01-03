@@ -10,6 +10,7 @@ v = {editable = true,version = "*"}
 
 [packages]
 numpy = "*"
+nptyping = "*"
 
 [requires]
 python_version = "3.7"
