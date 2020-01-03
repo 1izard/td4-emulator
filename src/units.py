@@ -1,4 +1,5 @@
-from typing import Tuple
+import numpy as np
+from nptyping import Array
 import functools
 
 
@@ -38,7 +39,7 @@ def XOR(*xs: bool) -> bool:
     return functools.reduce(_XOR, xs)
 
 
-def HA(a: bool, b: bool) -> Tuple[bool, bool]:
+def HA(a: bool, b: bool) -> Array[bool, 1, 2]:
     """Half Adder
 
     Arguments:
@@ -50,10 +51,10 @@ def HA(a: bool, b: bool) -> Tuple[bool, bool]:
     """
     c = AND(a, b)
     s = XOR(a, b)
-    return c, s
+    return np.array((c, s))
 
 
-def FA(cin: bool, a: bool, b: bool) -> Tuple[bool, bool]:
+def FA(cin: bool, a: bool, b: bool) -> Array[bool, 1, 2]:
     """Full Adder
 
     Arguments:
@@ -67,10 +68,11 @@ def FA(cin: bool, a: bool, b: bool) -> Tuple[bool, bool]:
     t1_c, t1_s = HA(a, b)
     t2_c, t2_s = HA(cin, t1_s)
     c = OR(t2_c, t1_c)
-    return c, t2_s
+    return np.array((c, t2_s))
 
 
-def ALU(cin: bool, arr_a: Tuple[bool], arr_b: Tuple[bool]) -> Tuple[bool, Tuple[bool]]:
+def ALU(cin: bool, arr_a: Array[bool, 1, 4], arr_b: Array[bool, 1, 4]) \
+        -> Array[bool, 1, 9]:
     if arr_a is None or arr_b is None or len(arr_a) != 4 or len(arr_b) != 4:
         raise ValueError('Length of each input operands must be 4')
 
@@ -83,4 +85,4 @@ def ALU(cin: bool, arr_a: Tuple[bool], arr_b: Tuple[bool]) -> Tuple[bool, Tuple[
             yield s
 
     sums = tuple(_FA())
-    return c, sums
+    return np.array((c,) + sums)
