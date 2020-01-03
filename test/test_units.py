@@ -88,6 +88,65 @@ class TestUnits(unittest.TestCase):
         expected = np.array(e)
         assert_array_equal(expected, actuals)
 
+    def test__MUX(self):
+        args = (
+            # c0
+            (False, False) + (False, False, False, False),
+            (False, False) + (False, True, False, False),
+
+            (False, False) + (True, False, False, False),
+            (False, False) + (True, True, False, False),
+
+            # c1
+            (True, False) + (False, False, False, False),
+            (True, False) + (False, False, True, False),
+
+            (True, False) + (False, True, False, False),
+            (True, False) + (False, True, True, False),
+
+            # c2
+            (False, True) + (False, False, False, False),
+            (False, True) + (False, False, False, True),
+
+            (False, True) + (False, False, True, False),
+            (False, True) + (False, False, True, True),
+
+            # c3
+            (True, True) + (False, False, False, False),
+            (True, True) + (True, False, False, False),
+
+            (True, True) + (False, False, False, True),
+            (True, True) + (True, False, False, True),
+        )
+        actuals = (units._MUX(*arg) for arg in args)
+        expecteds = (False, False, True, True) * 4
+        for e, a in zip(actuals, expecteds):
+            self.assertEqual(e, a)
+
+    def test_MUX(self):
+        args = (
+            # c0
+            (False, False, utils.bastr2ba('1010'), utils.bastr2ba('1011'),
+                utils.bastr2ba('1100'), utils.bastr2ba('1101')),
+
+            # c1
+            (True, False, utils.bastr2ba('1010'), utils.bastr2ba('1011'),
+                utils.bastr2ba('1100'), utils.bastr2ba('1101')),
+
+            # c2
+            (False, True, utils.bastr2ba('1010'), utils.bastr2ba('1011'),
+                utils.bastr2ba('1100'), utils.bastr2ba('1101')),
+
+            # c3
+            (True, True, utils.bastr2ba('1010'), utils.bastr2ba('1011'),
+                utils.bastr2ba('1100'), utils.bastr2ba('1101')),
+        )
+        actuals = (units.MUX(*arg) for arg in args)
+        expecteds = (utils.bastr2ba('1010'), utils.bastr2ba('1011'),
+                     utils.bastr2ba('1100'), utils.bastr2ba('1101'))
+        for e, a in zip(expecteds, actuals):
+            assert_array_equal(e, a)
+
 
 if __name__ == '_main__':
     unittest.main()

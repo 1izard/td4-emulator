@@ -75,6 +75,11 @@ def ALU(cin: bool, arr_a: Array[bool, 1, 4], arr_b: Array[bool, 1, 4]) \
         -> Array[bool, 1, 5]:
     """ALU: 4-bit Full Adder
 
+    Arguments:
+        cin {bool} -- input carry
+        arr_a {Array[bool, 1, 4]} -- 4-bit array as operand a
+        arr_b {Array[bool, 1, 4]} -- 4-bit array as operand b
+
     Raises:
         ValueError: Length of arr_a and arr_b must be 4
 
@@ -105,7 +110,7 @@ def AR(a: bool, b: bool, c: bool, d: bool, g1_: bool, g2_: bool) -> Array[bool, 
         b {bool} -- 1st bit
         c {bool} -- 2nd bit
         d {bool} -- 3rd bit
-        g1 {bool} -- must be False 
+        g1 {bool} -- must be False
         g2 {bool} -- must be False
 
     Returns:
@@ -121,3 +126,30 @@ def AR(a: bool, b: bool, c: bool, d: bool, g1_: bool, g2_: bool) -> Array[bool, 
     t6 = NOT(NAND(NOT(c), d))
     t7 = NOT(NAND(c, d))
     return np.array([NOT(NAND(g, i, j)) for i in (t4, t5, t6, t7) for j in (t0, t1, t2, t3)])
+
+
+def _MUX(a: bool, b: bool, c0: bool, c1: bool, c2: bool, c3: bool) -> bool:
+    t0 = AND(c0, NOT(a), NOT(b))
+    t1 = AND(c1, a, NOT(b))
+    t2 = AND(c2, NOT(a), b)
+    t3 = AND(c3, a, b)
+    return OR(t0, t1, t2, t3)
+
+
+def MUX(a: bool, b: bool,
+        ca: Array[bool, 1, 4], cb: Array[bool, 1, 4], cc: Array[bool, 1, 4], cd: Array[bool, 1, 4])\
+        -> Array[bool, 1, 4]:
+    """4-input Multiplexer
+
+    Arguments:
+        a {bool} -- select a
+        b {bool} -- select b
+        ca {Array[bool, 1, 4]} -- 1st input 4-bit array
+        cb {Array[bool, 1, 4]} -- 2nd input 4-bit array
+        cc {Array[bool, 1, 4]} -- 3rd input 4-bit array
+        cd {Array[bool, 1, 4]} -- 4th input 4-bit array
+
+    Returns:
+        Array[bool, 1, 4] -- Selected 4-bit array
+    """
+    return np.array(tuple(_MUX(a, b, ca[i], cb[i], cc[i], cd[i]) for i in range(4)))
