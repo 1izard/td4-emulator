@@ -97,8 +97,8 @@ def AR(a: bool, b: bool, c: bool, d: bool, g1: bool, g2: bool) -> Array[bool, 1,
         b {bool} -- 1st bit
         c {bool} -- 2nd bit
         d {bool} -- 3rd bit
-        g1 {bool} -- must pass True
-        g2 {bool} -- must pass True
+        g1 {bool} -- must be True
+        g2 {bool} -- must be True
 
     Returns:
         Array[bool, 1, 16] -- Signal to spesify address of ROM (LSB is index=0)
