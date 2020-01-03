@@ -76,6 +76,18 @@ class TestUnits(unittest.TestCase):
         expected = np.array(tuple(_get_expected(*arg) for arg in args))
         assert_array_equal(expected, actuals)
 
+    def test_AR(self):
+        patterns = gen_all_bool_patterns(4)
+        # reverse bit_arr because LSB is a and MSB is d in AR.
+        # (g1, g2) is fixed with (1, 1)
+        args = (p[::-1] + (1, 1) for p in patterns)
+        actuals = np.array(tuple(units.AR(*arg) for arg in args))
+        e = [[False for _ in range(16)] for _ in range(16)]
+        for i in range(16):
+            e[i][i] = True
+        expected = np.array(e)
+        assert_array_equal(expected, actuals)
+
 
 if __name__ == '_main__':
     unittest.main()
