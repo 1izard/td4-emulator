@@ -96,7 +96,7 @@ def ALU(cin: bool, arr_a: Array[bool, 1, 4], arr_b: Array[bool, 1, 4]) \
     return np.array((c,) + sums)
 
 
-def AR(a: bool, b: bool, c: bool, d: bool, g1: bool, g2: bool) -> Array[bool, 1, 16]:
+def AR(a: bool, b: bool, c: bool, d: bool, g1_: bool, g2_: bool) -> Array[bool, 1, 16]:
     """Address Resolver. Convert 4-bit signal to one of 16 address for ROM.
     e.g, Returned (True, False, ..., False) implies 0th address in ROM.
 
@@ -105,13 +105,13 @@ def AR(a: bool, b: bool, c: bool, d: bool, g1: bool, g2: bool) -> Array[bool, 1,
         b {bool} -- 1st bit
         c {bool} -- 2nd bit
         d {bool} -- 3rd bit
-        g1 {bool} -- must be True
-        g2 {bool} -- must be True
+        g1 {bool} -- must be False 
+        g2 {bool} -- must be False
 
     Returns:
         Array[bool, 1, 16] -- Signal to spesify address of ROM (LSB is index=0)
     """
-    g = NOT(NAND(g1, g2))
+    g = NOT(NAND(NOT(g1_), NOT(g2_)))
     t0 = NOT(NAND(NOT(a), NOT(b)))
     t1 = NOT(NAND(a, NOT(b)))
     t2 = NOT(NAND(NOT(a), b))
