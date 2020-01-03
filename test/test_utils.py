@@ -6,6 +6,12 @@ from src import utils
 
 
 class TestUnits(unittest.TestCase):
+    def test_bat2int(self):
+        arg = (False, True, False, True, False)
+        actual = utils.bat2int(arg)
+        expected = 10
+        assert_array_equal(expected, actual)
+
     def test_ba2int(self):
         arg = np.array((False, True, False, True, False))
         actual = utils.ba2int(arg)
@@ -18,10 +24,22 @@ class TestUnits(unittest.TestCase):
         expected = '01010'
         assert_array_equal(expected, actual)
 
+    def test_bastr2bat(self):
+        arg = '01010'
+        actual = utils.bastr2bat(arg)
+        expected = (False, True, False, True, False)
+        assert_array_equal(expected, actual)
+
     def test_bastr2ba(self):
         arg = '01010'
         actual = utils.bastr2ba(arg)
         expected = np.array((False, True, False, True, False))
+        assert_array_equal(expected, actual)
+
+    def test_int2bat(self):
+        arg = 10
+        actual = utils.int2bat(arg, 5)
+        expected = (False, True, False, True, False)
         assert_array_equal(expected, actual)
 
     def test_int2ba(self):

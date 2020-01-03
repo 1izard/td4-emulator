@@ -5,18 +5,32 @@ from nptyping import Array
 import unittest
 import itertools
 
+from src import CONFIG
 
-def ba2int(bit_arr: Array[bool, 1, 4]) -> int:
+
+def bat2int(bit_arr: Tuple[bool]) -> int:
     bit_arr_str = ''.join(str(int(b)) for b in bit_arr)
     return int(bit_arr_str, 2)
+
+
+def ba2int(bit_arr: Array[bool, 1, ...]) -> int:
+    return bat2int(bit_arr)
 
 
 def int2bastr(i: int, digit: int) -> str:
     return f'{i:0{digit}b}'
 
 
+def bastr2bat(bit_arr_str: str) -> Tuple[bool]:
+    return tuple(bool(int(s)) for s in bit_arr_str)
+
+
 def bastr2ba(bit_arr_str: str) -> Array[bool, 1, ...]:
-    return np.array(tuple(bool(int(s)) for s in bit_arr_str))
+    return np.array(bastr2bat(bit_arr_str))
+
+
+def int2bat(i: int, digit: int) -> Tuple[bool]:
+    return bastr2bat(int2bastr(i, digit))
 
 
 def int2ba(i: int, digit: int) -> Array[bool, 1, ...]:
