@@ -49,7 +49,7 @@ INSTRUCTIONS = {
 
 def assemble_line(line: str) -> Tuple[bool]:
     if len(line) == 0:
-        return tuple(np.nan for _ in range(8))
+        raise ValueError('Invalid syntax: line {}; Empty line is not allow')
 
     code = OP_PATTERN.findall(line)
     if not (len(code) in (2, 3)):
