@@ -152,8 +152,25 @@ def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
     return np.array((select_a, select_b, load0_, load1_, load2_, load3_))
 
 
-def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
-    """Return register; 74HC161 as COUNTER or REGISTER
+def build_D_FF() -> Callable[[], bool]:
+    """Return D-FF
+
+    Returns:
+        Callable[[], bool] -- D-FF
+    """
+    def _D_FF():
+        d = False
+        while True:
+            ck, reset_ = yield
+            d = yield d
+            if reset_ is False:
+                d = False
+
+    return _D_FF()
+
+
+def build_REGISTER(ent: bool, enp: bool) -> Callable[[], Array[bool, 1, 4]]:
+    """Build and return register; 74HC161 as COUNTER or REGISTER
 
     Arguments:
         ent {bool} -- flag to decide which of COUNTER or REGISTER
@@ -163,15 +180,17 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
         ValueError: raised when ent and enp are Not (True, True) or (False, False)
 
     Returns:
-        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- COUNTER or REGISTER
+        Callable[[], Array[bool, 1, 4]] -- COUNTER or REGISTER
 
     Yields:
-        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- q; state of a register
+        Callable[[], Array[bool, 1, 4]] -- q; state of a register
     """
-    def _COUNTER(load_: bool, reset_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+    def _COUNTER() -> Array[bool, 1, 4]:
+        load_ = False
+        q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
-            ck = yield
-            load_, reset_, input_arr = yield q  # return q when clock passed
+            ck, reset_ = yield
+            load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
             else:
@@ -180,19 +199,21 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
             if reset_ is False:
                 q = utils.bastr2ba('0000')
 
-    def _REGISTER(load_: bool, reset_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+    def _REGISTER() -> Array[bool, 1, 4]:
+        load_ = False
+        q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
-            ck = yield
-            load_, reset_, input_arr = yield q  # return q when clock passed
+            ck, reset_ = yield
+            load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
             if reset_ is False:
                 q = utils.bastr2ba('0000')
 
     if ent and enp:
-        return _COUNTER(False, True, utils.bastr2ba('0000'))
+        return _COUNTER()
     elif (ent is False) and (enp is False):
-        return _REGISTER(False, True, utils.bastr2ba('0000'))
+        return _REGISTER()
     else:
         raise ValueError('ent and enp are must be (True, True) or (False, False)')
 
@@ -226,7 +247,7 @@ def AR(address: Array[bool, 1, 4], g1_: bool, g2_: bool) -> Array[bool, 1, 16]:
 
 
 def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], Array[bool, 1, 8]]:
-    """Make ROM
+    """Build and return ROM
 
     Arguments:
         bit_matrix {Array[bool, 16, 8]} -- memory
@@ -241,7 +262,7 @@ def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], A
 
 
 def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
-    """Build Clock Generator
+    """Build and return Clock Generator
 
     Arguments:
         cc {ClockCycle} -- Clock Cycle defined in Enum: ClockCycle
@@ -265,6 +286,6 @@ def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
             yield clock, reset
 
     if cc in (ClockCycle.NORMAL, ClockCycle.HIGH):
-        return _AUTO_CLOCK_GENERATOR
+        return _AUTO_CLOCK_GENERATOR()
     else:
-        return _MANUAL_CLOCK_GENERATOR
+        return _MANUAL_CLOCK_GENERATOR()

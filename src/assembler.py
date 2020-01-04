@@ -82,11 +82,11 @@ def assemble(program_path: str) -> Array[bool, 16, 8]:
 
     if len(program) > 16:
         raise ValueError(
-            'Program must be <= 16 lines because of ROM capacity.'
-            + f'\nprogram path: {program_path}')
+            'Program must be <= 16 lines because of ROM capacity.\n'
+            + f'program path: {program_path}')
 
     if len(program) == 0:
-        return np.full((16, 8), np.nan)
+        return np.full((16, 8), False)
 
     operations = []
     for i, line in enumerate(program, 1):
@@ -95,6 +95,6 @@ def assemble(program_path: str) -> Array[bool, 16, 8]:
         except ValueError as err:
             raise ValueError(str(err).format(i))
         operations.append(ope)
-    padding = [tuple(np.nan for _ in range(8)) for _ in range(16 - len(program))]
+    padding = [tuple(False for _ in range(8)) for _ in range(16 - len(program))]
     operations += padding
     return np.array(operations)
