@@ -10,11 +10,6 @@ def main():
     PC = units.build_REGISTER(True, True)
     D_FF_C = units.build_D_FF()
 
-    next(PC)
-    next(REGISTER_A)
-    next(REGISTER_B)
-    next(REGISTER_C)
-    next(D_FF_C)
     q_d = utils.bastr2ba('0000')    # MUX input; cd is fixed with 0000
     q_c_in = utils.bastr2ba('0000')
     count = 0

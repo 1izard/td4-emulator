@@ -4,7 +4,7 @@ from typing import Callable, Tuple
 import functools
 import time
 
-from src import utils, ClockCycle
+from src import ClockCycle, utils, decorators
 
 
 def NOT(x: bool) -> bool:
@@ -158,6 +158,7 @@ def build_D_FF() -> Callable[[], bool]:
     Returns:
         Callable[[], bool] -- D-FF
     """
+    @decorators.coroutine
     def _D_FF():
         d = False
         while True:
@@ -185,6 +186,7 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[], Array[bool, 1, 4]]:
     Yields:
         Callable[[], Array[bool, 1, 4]] -- q; state of a register
     """
+    @decorators.coroutine
     def _COUNTER() -> Array[bool, 1, 4]:
         load_ = False
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
@@ -199,6 +201,7 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[], Array[bool, 1, 4]]:
             if reset_ is False:
                 q = utils.bastr2ba('0000')
 
+    @decorators.coroutine
     def _REGISTER() -> Array[bool, 1, 4]:
         load_ = False
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
