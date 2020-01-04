@@ -186,20 +186,28 @@ class TestUnits(unittest.TestCase):
         D_FF = units.build_D_FF()
         next(D_FF)
 
-        D_FF.send((True, True, True))
-        actual = D_FF.send((True, True, False))
+        D_FF.send((True, True))
+        D_FF.send(True)
+        actual = D_FF.send((True, True))
         expected = True
         self.assertEqual(expected, actual)
 
-        actual = D_FF.send((True, True, True))
+        D_FF.send(False)
+        actual = D_FF.send((True, True))
         expected = False
         self.assertEqual(expected, actual)
 
         # reset
-        D_FF.send((True, True, True))
-        D_FF.send((True, False, True))
-        actual = D_FF.send((True, True, True))
+        D_FF.send(True)
+        D_FF.send((True, False))
+        D_FF.send(True)
+        actual = D_FF.send((True, True))
         expected = False
+        self.assertEqual(expected, actual)
+
+        D_FF.send(True)
+        actual = D_FF.send((True, True))
+        expected = True
         self.assertEqual(expected, actual)
 
     def test_build_REGISTER_for_invalid_ent_and_enp(self):

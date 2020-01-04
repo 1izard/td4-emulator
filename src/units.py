@@ -159,12 +159,12 @@ def build_D_FF() -> Callable[[], bool]:
         Callable[[], bool] -- D_FF
     """
     def _D_FF():
-        d, _d = False, False
+        d = False
         while True:
-            ck, reset_, d = yield d
+            ck, reset_ = yield
+            d = yield d
             if reset_ is False:
                 d = False
-            d, _d = _d, d
 
     return _D_FF()
 
