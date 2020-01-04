@@ -152,8 +152,25 @@ def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
     return np.array((select_a, select_b, load0_, load1_, load2_, load3_))
 
 
-def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
-    """Return register; 74HC161 as COUNTER or REGISTER
+def build_D_FF() -> Callable[[], bool]:
+    """Return D-FF
+
+    Returns:
+        Callable[[], bool] -- D_FF
+    """
+    def _D_FF():
+        d, _d = False, False
+        while True:
+            ck, reset_, d = yield d
+            if reset_ is False:
+                d = False
+            d, _d = _d, d
+
+    return _D_FF()
+
+
+def build_REGISTER(ent: bool, enp: bool) -> Callable[[], Array[bool, 1, 4]]:
+    """Build and return register; 74HC161 as COUNTER or REGISTER
 
     Arguments:
         ent {bool} -- flag to decide which of COUNTER or REGISTER
@@ -163,10 +180,10 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
         ValueError: raised when ent and enp are Not (True, True) or (False, False)
 
     Returns:
-        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- COUNTER or REGISTER
+        Callable[[], Array[bool, 1, 4]] -- COUNTER or REGISTER
 
     Yields:
-        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- q; state of a register
+        Callable[[], Array[bool, 1, 4]] -- q; state of a register
     """
     def _COUNTER() -> Array[bool, 1, 4]:
         load_ = False
@@ -230,7 +247,7 @@ def AR(address: Array[bool, 1, 4], g1_: bool, g2_: bool) -> Array[bool, 1, 16]:
 
 
 def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], Array[bool, 1, 8]]:
-    """Make ROM
+    """Build and return ROM
 
     Arguments:
         bit_matrix {Array[bool, 16, 8]} -- memory
@@ -245,7 +262,7 @@ def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], A
 
 
 def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
-    """Build Clock Generator
+    """Build and return Clock Generator
 
     Arguments:
         cc {ClockCycle} -- Clock Cycle defined in Enum: ClockCycle

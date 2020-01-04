@@ -182,6 +182,26 @@ class TestUnits(unittest.TestCase):
         for e, a in zip(expecteds, actuals):
             assert_array_equal(e, a)
 
+    def test_build_D_FF(self):
+        D_FF = units.build_D_FF()
+        next(D_FF)
+
+        D_FF.send((True, True, True))
+        actual = D_FF.send((True, True, False))
+        expected = True
+        self.assertEqual(expected, actual)
+
+        actual = D_FF.send((True, True, True))
+        expected = False
+        self.assertEqual(expected, actual)
+
+        # reset
+        D_FF.send((True, True, True))
+        D_FF.send((True, False, True))
+        actual = D_FF.send((True, True, True))
+        expected = False
+        self.assertEqual(expected, actual)
+
     def test_build_REGISTER_for_invalid_ent_and_enp(self):
         with self.assertRaises(ValueError) as context:
             units.build_REGISTER(False, True)
