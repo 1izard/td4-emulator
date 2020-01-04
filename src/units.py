@@ -192,28 +192,24 @@ def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], A
         Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- COUNTER or REGISTER
 
     Yields:
-        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- Q; previous state of a register
+        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- q; state of a register
     """
-    def COUNTER(load_: bool, state: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
-        _state = state  # _state is previous state
+    def COUNTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
-            load_, input_arr = yield _state
-            state, _state = _state, state   # swap to update previous state
+            ck = yield
+            load_, input_arr = yield q
             if load_ is False:
-                state = input_arr
+                q = input_arr
             else:
-                res = ALU(False, _state, utils.bastr2ba('1000'))  # count up
-                state = res[1:]  # res[0] is carry
+                res = ALU(False, q, utils.bastr2ba('1000'))  # count up
+                q = res[1:]  # res[0] is carry
 
-    def REGISTER(load_: bool, state: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
-        _state = state
+    def REGISTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
-            load_, input_arr = yield _state
-            state, _state = _state, state   # swap to update previous state
+            ck = yield
+            load_, input_arr = yield q
             if load_ is False:
-                state = input_arr
-            else:
-                state = _state
+                q = input_arr
 
     if ent and enp:
         return COUNTER(False, utils.bastr2ba('0000'))
