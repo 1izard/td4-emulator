@@ -197,7 +197,7 @@ def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], A
     def COUNTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
             ck = yield
-            load_, input_arr = yield q
+            load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
             else:
@@ -207,7 +207,7 @@ def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], A
     def REGISTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
             ck = yield
-            load_, input_arr = yield q
+            load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
 
