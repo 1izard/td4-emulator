@@ -170,7 +170,6 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
     """
     def _COUNTER() -> Array[bool, 1, 4]:
         load_ = False
-        reset_ = True
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
             ck, reset_ = yield
@@ -185,7 +184,6 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
 
     def _REGISTER() -> Array[bool, 1, 4]:
         load_ = False
-        reset_ = True
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
             ck, reset_ = yield
