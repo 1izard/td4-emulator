@@ -167,27 +167,31 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
     Yields:
         Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- q; state of a register
     """
-    def _COUNTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+    def _COUNTER(load_: bool, reset_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
             ck = yield
-            load_, input_arr = yield q  # return q when clock passed
+            load_, reset_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
             else:
                 res = ALU(False, q, utils.bastr2ba('1000'))  # count up
                 q = res[1:]  # res[0] is carry
+            if reset_ is False:
+                q = utils.bastr2ba('0000')
 
-    def _REGISTER(load_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+    def _REGISTER(load_: bool, reset_: bool, q: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         while True:
             ck = yield
-            load_, input_arr = yield q  # return q when clock passed
+            load_, reset_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
+            if reset_ is False:
+                q = utils.bastr2ba('0000')
 
     if ent and enp:
-        return _COUNTER(False, utils.bastr2ba('0000'))
+        return _COUNTER(False, True, utils.bastr2ba('0000'))
     elif (ent is False) and (enp is False):
-        return _REGISTER(False, utils.bastr2ba('0000'))
+        return _REGISTER(False, True, utils.bastr2ba('0000'))
     else:
         raise ValueError('ent and enp are must be (True, True) or (False, False)')
 
