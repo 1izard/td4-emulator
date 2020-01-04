@@ -219,7 +219,9 @@ class TestUnits(unittest.TestCase):
 
         # reset
         COUNTER.send((True, utils.bastr2ba('1010')[::-1]))
-        actual = COUNTER.send((True, False))
+        COUNTER.send((True, False))
+        COUNTER.send((True, utils.bastr2ba('1010')[::-1]))
+        actual = COUNTER.send((True, True))
         expected = utils.bastr2ba('0000')[::-1]
         assert_array_equal(expected, actual)
 
@@ -249,7 +251,9 @@ class TestUnits(unittest.TestCase):
 
         # reset
         REGISTER.send((True, utils.bastr2ba('1010')[::-1]))
-        actual = REGISTER.send((True, False))
+        REGISTER.send((True, False))
+        REGISTER.send((True, utils.bastr2ba('1010')[::-1]))
+        actual = REGISTER.send((True, True))
         expected = utils.bastr2ba('0000')[::-1]
         assert_array_equal(expected, actual)
 

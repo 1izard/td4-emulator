@@ -173,25 +173,25 @@ def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], 
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
             ck, reset_ = yield
-            if reset_ is False:
-                q = utils.bastr2ba('0000')
             load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
             else:
                 res = ALU(False, q, utils.bastr2ba('1000'))  # count up
                 q = res[1:]  # res[0] is carry
+            if reset_ is False:
+                q = utils.bastr2ba('0000')
 
     def _REGISTER() -> Array[bool, 1, 4]:
         load_ = False
         q: Array[bool, 1, 4] = utils.bastr2ba('0000')
         while True:
             ck, reset_ = yield
-            if reset_ is False:
-                q = utils.bastr2ba('0000')
             load_, input_arr = yield q  # return q when clock passed
             if load_ is False:
                 q = input_arr
+            if reset_ is False:
+                q = utils.bastr2ba('0000')
 
     if ent and enp:
         return _COUNTER()
