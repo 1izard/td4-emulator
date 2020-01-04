@@ -1,6 +1,9 @@
 import numpy as np
 from nptyping import Array
+from typing import Callable
 import functools
+
+from src import utils
 
 
 def NOT(x: bool) -> bool:
@@ -173,3 +176,48 @@ def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
     load2_ = NAND(NOT(op2), op3)
     load3_ = NAND(op2, op3, OR(op0, c_flag_))
     return np.array((select_a, select_b, load0_, load1_, load2_, load3_))
+
+
+def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
+    """Return register; 74HC161 as COUNTER or REGISTER
+
+    Arguments:
+        ent {bool} -- flag to decide which of COUNTER or REGISTER
+        enp {bool} -- flag to decide which of COUNTER or REGISTER
+
+    Raises:
+        ValueError: raised when ent and enp are Not (True, True) or (False, False)
+
+    Returns:
+        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- COUNTER or REGISTER
+
+    Yields:
+        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- Q; previous state of a register
+    """
+    def COUNTER(load_: bool, state: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+        _state = state  # _state is previous state
+        while True:
+            load_, input_arr = yield _state
+            state, _state = _state, state   # swap to update previous state
+            if load_ is False:
+                state = input_arr
+            else:
+                res = ALU(False, _state, utils.bastr2ba('1000'))  # count up
+                state = res[1:]  # res[0] is carry
+
+    def REGISTER(load_: bool, state: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
+        _state = state
+        while True:
+            load_, input_arr = yield _state
+            state, _state = _state, state   # swap to update previous state
+            if load_ is False:
+                state = input_arr
+            else:
+                state = _state
+
+    if ent and enp:
+        return COUNTER(False, utils.bastr2ba('0000'))
+    elif (ent is False) and (enp is False):
+        return REGISTER(False, utils.bastr2ba('0000'))
+    else:
+        raise ValueError('ent and enp are must be (True, True) or (False, False)')
