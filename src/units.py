@@ -1,9 +1,10 @@
 import numpy as np
 from nptyping import Array
-from typing import Callable
+from typing import Callable, Tuple
 import functools
+import time
 
-from src import utils
+from src import utils, ClockCycle
 
 
 def NOT(x: bool) -> bool:
@@ -237,3 +238,33 @@ def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], A
         return bit_matrix[AR(address, False, False)][0]
 
     return _ROM
+
+
+def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
+    """Build Clock Generator
+
+    Arguments:
+        cc {ClockCycle} -- Clock Cycle defined in Enum: ClockCycle
+
+    Returns:
+        Callable[[], Tuple[bool, bool]] -- CLOCK_GENERATOR
+    """
+    def _AUTO_CLOCK_GENERATOR():
+        while True:
+            time.sleep(1 / cc.value)
+            clock, reset = True, True
+            yield clock, reset
+
+    # TODO
+    def _MANUAL_CLOCK_GENERATOR():
+        while True:
+            print('> ', end=' ')
+            s = input().split()
+            print(s)
+            clock, reset = True, True
+            yield clock, reset
+
+    if cc in (ClockCycle.NORMAL, ClockCycle.HIGH):
+        return _AUTO_CLOCK_GENERATOR
+    else:
+        return _MANUAL_CLOCK_GENERATOR
