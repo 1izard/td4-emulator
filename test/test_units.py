@@ -182,6 +182,62 @@ class TestUnits(unittest.TestCase):
         for e, a in zip(expecteds, actuals):
             assert_array_equal(e, a)
 
+    def test_make_REGISTER_for_invalid_ent_and_enp(self):
+        with self.assertRaises(ValueError) as context:
+            units.make_REGISTER(False, True)
+        self.assertTrue(
+            'ent and enp are must be (True, True) or (False, False)' in str(context.exception))
+
+        with self.assertRaises(ValueError) as context:
+            units.make_REGISTER(True, False)
+        self.assertTrue(
+            'ent and enp are must be (True, True) or (False, False)' in str(context.exception))
+
+    def test_make_REGISTER_for_COUNTER(self):
+        args = (True, True)
+        counter = units.make_REGISTER(*args)
+        next(counter)
+
+        # count
+        actual = counter.send((True, utils.bastr2ba('1010')[::-1]))
+        expected = utils.bastr2ba('0000')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+        # load
+        actual = counter.send((False, utils.bastr2ba('0101')[::-1]))
+        expected = utils.bastr2ba('0001')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+        # count
+        actual = counter.send((True, utils.bastr2ba('1010')[::-1]))
+        expected = utils.bastr2ba('0101')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+        # load
+        actual = counter.send((True, utils.bastr2ba('0101')[::-1]))
+        expected = utils.bastr2ba('0110')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+    def test_make_REGISTER_for_REGISTER(self):
+        args = (False, False)
+        register = units.make_REGISTER(*args)
+        next(register)
+
+        # load
+        actual = register.send((False, utils.bastr2ba('1010')[::-1]))
+        expected = utils.bastr2ba('0000')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+        # hold
+        actual = register.send((True, utils.bastr2ba('0101')[::-1]))
+        expected = utils.bastr2ba('1010')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
+        # hold
+        actual = register.send((True, utils.bastr2ba('0000')[::-1]))
+        expected = utils.bastr2ba('1010')[::-1]   # previous state
+        assert_array_equal(expected, actual)
+
 
 if __name__ == '_main__':
     unittest.main()
