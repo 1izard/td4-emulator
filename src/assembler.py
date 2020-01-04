@@ -3,7 +3,7 @@ from typing import Tuple
 from nptyping import Array
 import re
 
-from src import CONFIG, utils
+from src import utils
 
 
 OP_PATTERN = re.compile(r'(\w+)')
@@ -49,7 +49,7 @@ INSTRUCTIONS = {
 
 def assemble_line(line: str) -> Tuple[bool]:
     if len(line) == 0:
-        raise ValueError('Invalid syntax: line {}; Empty line is not allow')
+        raise ValueError('Invalid syntax: line {}; Empty line is not allowed')
 
     code = OP_PATTERN.findall(line)
     if not (len(code) in (2, 3)):
@@ -70,7 +70,7 @@ def assemble_line(line: str) -> Tuple[bool]:
             else:
                 bit_arr = INSTRUCTIONS[ins][op1]['Im'] + utils.bastr2bat(op2)
     except KeyError:
-        raise ValueError('Invalid operation: line {}; No such a operation')
+        raise ValueError('Invalid operation: line {}; No such a instruction')
 
     # reverse because LSB is index = 0
     return bit_arr[::-1]

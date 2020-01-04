@@ -5,8 +5,6 @@ from nptyping import Array
 import unittest
 import itertools
 
-from src import CONFIG
-
 
 def bat2int(bit_arr: Tuple[bool]) -> int:
     bit_arr_str = ''.join(str(int(b)) for b in bit_arr)
@@ -37,7 +35,7 @@ def int2ba(i: int, digit: int) -> Array[bool, 1, ...]:
     return bastr2ba(int2bastr(i, digit))
 
 
-def gen_all_bool_patterns(length: int) -> Tuple[bool]:
+def gen_all_bool_patterns(length: int) -> Tuple[Tuple[bool]]:
     """Return all bool patterns. Be aware of the order of patterns.
 
     Arguments:
@@ -45,7 +43,7 @@ def gen_all_bool_patterns(length: int) -> Tuple[bool]:
 
     Returns:
         Tuple[Tuple[bool]] -- bool patterns (e.g, ((False, False), (False, True),
-        (True, False), (True, True)))
+        (True, False), (True, True))) when length is 2
     """
     tpls = tuple(((False, True)) for _ in range(length))
     return tuple(itertools.product(*tpls))
