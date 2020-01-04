@@ -226,12 +226,9 @@ def AR(address: Array[bool, 1, 4], g1_: bool, g2_: bool) -> Array[bool, 1, 16]:
     e.g, Returned (True, False, ..., False) implies 0th address in ROM.
 
     Arguments:
-        a {bool} -- 0th bit
-        b {bool} -- 1st bit
-        c {bool} -- 2nd bit
-        d {bool} -- 3rd bit
-        g1 {bool} -- must be False
-        g2 {bool} -- must be False
+        address {Array[bool, 1, 4]} -- 4-bit array; base-2 address number
+        g1_ {bool} -- must be False
+        g2_ {bool} -- must be False
 
     Returns:
         Array[bool, 1, 16] -- Signal to spesify address of ROM (LSB is index=0)
