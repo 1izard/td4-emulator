@@ -286,6 +286,6 @@ def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
             yield clock, reset
 
     if cc in (ClockCycle.NORMAL, ClockCycle.HIGH):
-        return _AUTO_CLOCK_GENERATOR
+        return _AUTO_CLOCK_GENERATOR()
     else:
-        return _MANUAL_CLOCK_GENERATOR
+        return _MANUAL_CLOCK_GENERATOR()
