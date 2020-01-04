@@ -79,7 +79,7 @@ class TestUnits(unittest.TestCase):
             ins['JMP']['Im'] + (True, False, True, False),
         )
         expected = np.array(tuple(t[::-1] for t in e) +
-                            tuple(tuple(np.nan for _ in range(8)) for _ in range(13)))
+                            tuple(tuple(False for _ in range(8)) for _ in range(13)))
         assert_array_equal(expected, actual)
 
     def test_assemble_for_empty_line(self):
