@@ -179,6 +179,21 @@ def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
 
 
 def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
+    """Return register; 74HC161 as COUNTER or REGISTER
+
+    Arguments:
+        ent {bool} -- flag to decide which of COUNTER or REGISTER
+        enp {bool} -- flag to decide which of COUNTER or REGISTER
+
+    Raises:
+        ValueError: raised when ent and enp are Not (True, True) or (False, False)
+
+    Returns:
+        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- COUNTER or REGISTER
+
+    Yields:
+        Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]] -- Q; previous state of a register
+    """
     def COUNTER(load_: bool, state: Array[bool, 1, 4]) -> Array[bool, 1, 4]:
         _state = state  # _state is previous state
         while True:
