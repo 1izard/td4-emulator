@@ -149,17 +149,17 @@ class TestUnits(unittest.TestCase):
 
     def test_DECODER(self):
         args = (
-            (utils.bastr2ba('0011')[::-1], False),  # MOV A Im
-            (utils.bastr2ba('0111')[::-1], False),  # MOV B Im
-            (utils.bastr2ba('0001')[::-1], False),  # MOV A B
-            (utils.bastr2ba('0100')[::-1], False),  # MOV B A
-            (utils.bastr2ba('0000')[::-1], False),  # ADD A Im
-            (utils.bastr2ba('0101')[::-1], False),  # ADD B Im
-            (utils.bastr2ba('0010')[::-1], False),  # IN A
-            (utils.bastr2ba('0110')[::-1], False),  # IN B
-            (utils.bastr2ba('1011')[::-1], False),  # OUT Im
-            (utils.bastr2ba('1001')[::-1], False),  # OUT B
-            (utils.bastr2ba('1111')[::-1], False),  # JMP Im
+            (utils.bastr2ba('0011')[::-1], True),  # MOV A Im
+            (utils.bastr2ba('0111')[::-1], True),  # MOV B Im
+            (utils.bastr2ba('0001')[::-1], True),  # MOV A B
+            (utils.bastr2ba('0100')[::-1], True),  # MOV B A
+            (utils.bastr2ba('0000')[::-1], True),  # ADD A Im
+            (utils.bastr2ba('0101')[::-1], True),  # ADD B Im
+            (utils.bastr2ba('0010')[::-1], True),  # IN A
+            (utils.bastr2ba('0110')[::-1], True),  # IN B
+            (utils.bastr2ba('1011')[::-1], True),  # OUT Im
+            (utils.bastr2ba('1001')[::-1], True),  # OUT B
+            (utils.bastr2ba('1111')[::-1], True),  # JMP Im
             (utils.bastr2ba('1110')[::-1], True),  # JNC Im with c = 0; c_flog_ = 1
             (utils.bastr2ba('1110')[::-1], False),  # JNC Im with c = 1; c_flog_ = 0
         )
