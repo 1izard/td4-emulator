@@ -156,7 +156,7 @@ def build_D_FF() -> Callable[[], bool]:
     """Return D-FF
 
     Returns:
-        Callable[[], bool] -- D_FF
+        Callable[[], bool] -- D-FF
     """
     def _D_FF():
         d = False
