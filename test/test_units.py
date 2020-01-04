@@ -184,7 +184,6 @@ class TestUnits(unittest.TestCase):
 
     def test_build_D_FF(self):
         D_FF = units.build_D_FF()
-        next(D_FF)
 
         D_FF.send((True, True))
         D_FF.send(True)
@@ -224,7 +223,6 @@ class TestUnits(unittest.TestCase):
     def test_build_REGISTER_for_COUNTER(self):
         args = (True, True)
         COUNTER = units.build_REGISTER(*args)
-        next(COUNTER)
 
         # count
         COUNTER.send((True, True))
@@ -256,7 +254,6 @@ class TestUnits(unittest.TestCase):
     def test_build_REGISTER_for_REGISTER(self):
         args = (False, False)
         REGISTER = units.build_REGISTER(*args)
-        next(REGISTER)
 
         # load
         REGISTER.send((True, True))
