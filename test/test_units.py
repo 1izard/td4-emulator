@@ -4,7 +4,7 @@ from typing import Tuple, Callable
 from nptyping import Array
 import unittest
 
-from src import units, utils
+from src import units, utils, assembler
 
 gen_all_bool_patterns = utils.gen_all_bool_patterns
 all_assert_equal = utils.all_assert_equal
@@ -80,7 +80,7 @@ class TestUnits(unittest.TestCase):
         patterns = gen_all_bool_patterns(4)
         # reverse bit_arr because LSB is a and MSB is d in AR.
         # (g1, g2) is fixed with (0, 0)
-        args = (p[::-1] + (0, 0) for p in patterns)
+        args = ((np.array(p[::-1]), 0, 0) for p in patterns)
         actuals = np.array(tuple(units.AR(*arg) for arg in args))
         e = [[False for _ in range(16)] for _ in range(16)]
         for i in range(16):
@@ -196,51 +196,73 @@ class TestUnits(unittest.TestCase):
     def test_make_REGISTER_for_COUNTER(self):
         ck = True
         args = (True, True)
-        counter = units.make_REGISTER(*args)
-        next(counter)
+        COUNTER = units.make_REGISTER(*args)
+        next(COUNTER)
 
         # count
-        counter.send(ck)
-        counter.send((True, utils.bastr2ba('1010')[::-1]))
-        actual = counter.send(ck)
+        COUNTER.send(ck)
+        COUNTER.send((True, utils.bastr2ba('1010')[::-1]))
+        actual = COUNTER.send(ck)
         expected = utils.bastr2ba('0001')[::-1]
         assert_array_equal(expected, actual)
 
         # load
-        counter.send((False, utils.bastr2ba('0101')[::-1]))
-        actual = counter.send(ck)
+        COUNTER.send((False, utils.bastr2ba('0101')[::-1]))
+        actual = COUNTER.send(ck)
         expected = utils.bastr2ba('0101')[::-1]
         assert_array_equal(expected, actual)
 
         # count
-        counter.send((True, utils.bastr2ba('1010')[::-1]))
-        actual = counter.send(ck)
+        COUNTER.send((True, utils.bastr2ba('1010')[::-1]))
+        actual = COUNTER.send(ck)
         expected = utils.bastr2ba('0110')[::-1]
         assert_array_equal(expected, actual)
 
     def test_make_REGISTER_for_REGISTER(self):
         ck = True
         args = (False, False)
-        register = units.make_REGISTER(*args)
-        next(register)
+        REGISTER = units.make_REGISTER(*args)
+        next(REGISTER)
 
         # load
-        register.send(ck)
-        register.send((False, utils.bastr2ba('1010')[::-1]))
-        actual = register.send(ck)
+        REGISTER.send(ck)
+        REGISTER.send((False, utils.bastr2ba('1010')[::-1]))
+        actual = REGISTER.send(ck)
         expected = utils.bastr2ba('1010')[::-1]
         assert_array_equal(expected, actual)
 
         # hold
-        register.send((True, utils.bastr2ba('0101')[::-1]))
-        actual = register.send(ck)
+        REGISTER.send((True, utils.bastr2ba('0101')[::-1]))
+        actual = REGISTER.send(ck)
         expected = utils.bastr2ba('1010')[::-1]   # must be previous state
         assert_array_equal(expected, actual)
 
         # hold
-        register.send((True, utils.bastr2ba('0000')[::-1]))
-        actual = register.send(ck)
+        REGISTER.send((True, utils.bastr2ba('0000')[::-1]))
+        actual = REGISTER.send(ck)
         expected = utils.bastr2ba('1010')[::-1]   # must be previous state
+        assert_array_equal(expected, actual)
+
+    def test_make_ROM(self):
+        _arg = np.array(tuple(utils.int2bat(i, 8) for i in range(16)))
+        ROM = units.make_ROM(_arg)
+
+        # line 0
+        arg = utils.bastr2ba('0000')[::-1]
+        actual = ROM(arg)
+        expected = _arg[0]
+        assert_array_equal(expected, actual)
+
+        # line 5
+        arg = utils.bastr2ba('0101')[::-1]
+        actual = ROM(arg)
+        expected = _arg[5]
+        assert_array_equal(expected, actual)
+
+        # line 11
+        arg = utils.bastr2ba('1011')[::-1]
+        actual = ROM(arg)
+        expected = _arg[11]
         assert_array_equal(expected, actual)
 
 
