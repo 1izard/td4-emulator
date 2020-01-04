@@ -4,7 +4,7 @@ from typing import Tuple, Callable
 from nptyping import Array
 import unittest
 
-from src import units, utils, assembler
+from src import units, utils
 
 gen_all_bool_patterns = utils.gen_all_bool_patterns
 all_assert_equal = utils.all_assert_equal
@@ -182,21 +182,21 @@ class TestUnits(unittest.TestCase):
         for e, a in zip(expecteds, actuals):
             assert_array_equal(e, a)
 
-    def test_make_REGISTER_for_invalid_ent_and_enp(self):
+    def test_build_REGISTER_for_invalid_ent_and_enp(self):
         with self.assertRaises(ValueError) as context:
-            units.make_REGISTER(False, True)
+            units.build_REGISTER(False, True)
         self.assertTrue(
             'ent and enp are must be (True, True) or (False, False)' in str(context.exception))
 
         with self.assertRaises(ValueError) as context:
-            units.make_REGISTER(True, False)
+            units.build_REGISTER(True, False)
         self.assertTrue(
             'ent and enp are must be (True, True) or (False, False)' in str(context.exception))
 
-    def test_make_REGISTER_for_COUNTER(self):
+    def test_build_REGISTER_for_COUNTER(self):
         ck = True
         args = (True, True)
-        COUNTER = units.make_REGISTER(*args)
+        COUNTER = units.build_REGISTER(*args)
         next(COUNTER)
 
         # count
@@ -218,10 +218,10 @@ class TestUnits(unittest.TestCase):
         expected = utils.bastr2ba('0110')[::-1]
         assert_array_equal(expected, actual)
 
-    def test_make_REGISTER_for_REGISTER(self):
+    def test_build_REGISTER_for_REGISTER(self):
         ck = True
         args = (False, False)
-        REGISTER = units.make_REGISTER(*args)
+        REGISTER = units.build_REGISTER(*args)
         next(REGISTER)
 
         # load
@@ -243,9 +243,9 @@ class TestUnits(unittest.TestCase):
         expected = utils.bastr2ba('1010')[::-1]   # must be previous state
         assert_array_equal(expected, actual)
 
-    def test_make_ROM(self):
+    def test_build_ROM(self):
         _arg = np.array(tuple(utils.int2bat(i, 8) for i in range(16)))
-        ROM = units.make_ROM(_arg)
+        ROM = units.build_ROM(_arg)
 
         # line 0
         arg = utils.bastr2ba('0000')[::-1]

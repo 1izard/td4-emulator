@@ -151,7 +151,7 @@ def DECODER(op_arr: Array[bool, 1, 4], c_flag_: bool) -> Array[bool, 1, 6]:
     return np.array((select_a, select_b, load0_, load1_, load2_, load3_))
 
 
-def make_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
+def build_REGISTER(ent: bool, enp: bool) -> Callable[[bool, Array[bool, 1, 4]], Array[bool, 1, 4]]:
     """Return register; 74HC161 as COUNTER or REGISTER
 
     Arguments:
@@ -220,7 +220,7 @@ def AR(address: Array[bool, 1, 4], g1_: bool, g2_: bool) -> Array[bool, 1, 16]:
     return np.array([NOT(NAND(g, i, j)) for i in (t4, t5, t6, t7) for j in (t0, t1, t2, t3)])
 
 
-def make_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], Array[bool, 1, 8]]:
+def build_ROM(bit_matrix: Array[bool, 16, 8]) -> Callable[[Array[bool, 1, 4]], Array[bool, 1, 8]]:
     """Make ROM
 
     Arguments:
