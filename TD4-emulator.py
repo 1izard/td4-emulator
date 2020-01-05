@@ -15,7 +15,7 @@ def run_TD4(cc: ClockCycle):
     step = 0
     max_step = CONFIG['max_step']
     for ck, reset in CLOCK_GENERATOR:
-        if step >= max_step or ck is False:
+        if step > max_step or ck is False:
             break
         q_PC, q_a, q_b, q_c_out, c_flag = PC.send((ck, reset)), REGISTER_A.send((ck, reset)),\
             REGISTER_B.send((ck, reset)), REGISTER_C.send((ck, reset)), D_FF_C.send((ck, reset))
@@ -54,7 +54,7 @@ def main():
             selected_run_menu = ui.run_menu()
             try:
                 run_TD4(selected_run_menu)
-                print('Finish')
+                print('\nFinish')
             except KeyboardInterrupt:
                 pass
         else:
