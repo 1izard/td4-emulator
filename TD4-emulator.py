@@ -31,7 +31,6 @@ def run_TD4(cc: ClockCycle):
         REGISTER_B.send((load1_, sum_arr))
         REGISTER_C.send((load2_, sum_arr))
         PC.send((load3_, sum_arr))
-        # print(f'spep: {step}, output: {utils.ba2str(q_c_out[::-1])}', flush=True, end='\r')
         units.DISPLAY(cc, **{
             'step': step, 'PC': utils.ba2str(q_PC[::-1]), 'output': utils.ba2str(q_c_out[::-1]),
             'REGISTER_A': utils.ba2str(q_a[::-1]), 'REGISTER_B': utils.ba2str(q_b[::-1]), 'c_flag': int(c_flag),
