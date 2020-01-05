@@ -12,7 +12,7 @@ And also this can be used as the 3-minutes *ramen timer* by using 1 Hz mode.
 
 
 # Installation and Usage
-- Clone this repository and go to 'TD4-emulator-py' directory where there is `TD4-emulator.py`.  
+- Clone this repository and go to `TD4-emulator-py` directory where there is `TD4-emulator.py`.  
 - Just type below, and TD4-emulator is executed.
 
 ```
