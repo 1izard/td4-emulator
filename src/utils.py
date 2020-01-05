@@ -6,9 +6,17 @@ import unittest
 import itertools
 
 
-def bat2int(bit_arr: Tuple[bool]) -> int:
+def bat2str(bit_arr: Tuple[bool]) -> str:
     bit_arr_str = ''.join(str(int(b)) for b in bit_arr)
-    return int(bit_arr_str, 2)
+    return bit_arr_str
+
+
+def ba2str(bit_arr: Array[bool, 1, ...]) -> str:
+    return bat2str(bit_arr)
+
+
+def bat2int(bit_arr: Tuple[bool]) -> int:
+    return int(bat2str(bit_arr), 2)
 
 
 def ba2int(bit_arr: Array[bool, 1, ...]) -> int:

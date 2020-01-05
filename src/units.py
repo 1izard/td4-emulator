@@ -4,7 +4,7 @@ from typing import Callable, Tuple
 import functools
 import time
 
-from src import ClockCycle, utils, decorators
+from src import ClockCycle, DebugMenu, utils, decorators, ui
 
 
 def NOT(x: bool) -> bool:
@@ -276,16 +276,30 @@ def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
             clock, reset = True, True
             yield clock, reset
 
-    # TODO
     def _MANUAL_CLOCK_GENERATOR():
         while True:
-            print('> ', end=' ')
-            s = input().split()
-            print(s)
-            clock, reset = True, True
-            yield clock, reset
+            dm = ui.debug_menu()
+            if dm is DebugMenu.NEXT:
+                ck, reset = True, True
+            elif dm is DebugMenu.RESET:
+                ck, reset = True, False
+            elif dm is DebugMenu.STOP:
+                ck, reset = False, True
+            else:
+                raise ValueError('Undefined debug menu is selected')
+            yield ck, reset
 
     if cc in (ClockCycle.NORMAL, ClockCycle.HIGH):
         return _AUTO_CLOCK_GENERATOR()
     else:
         return _MANUAL_CLOCK_GENERATOR()
+
+
+def DISPLAY(cc: ClockCycle, **kwargs):
+    if cc is ClockCycle.MANUAL:
+        fmt = '\nstep: {step}, PC: {PC}, output: {output}, REGISTER_A: {REGISTER_A}, REGISTER_B: {REGISTER_B}, c_flag: {c_flag}\n'\
+            + 'fetched_op: {fetched_op}, decode_res: {decode_res}, MUX_res: {MUX_res}, carry: {carry}, ALU_res: {ALU_res}\n'
+        print(fmt.format(**kwargs))
+    else:
+        fmt = 'step: {step}, output: {output}'
+        print(fmt.format(**kwargs), flush=True, end='\r')
