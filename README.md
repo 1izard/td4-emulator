@@ -4,7 +4,7 @@
 TD4-emulator consists of logic circuit units implemented by Python except for FF (See `src/units.py`).    
 `program.txt`, which is assembled and loaded into pseudo ROM by this tool when it is executed, is written to count 3 minutes and switch 4-bit console output per 1 min.     
   
-You can exec and play this by 3-mode; clock cycler is 1 Hz, 10 Hz, or manual.  
+You can exec and play this by 3-mode; clock cycle is 1 Hz, 10 Hz, or manual.  
 And also this can be used as the 3-minutes *ramen timer* by using 1 Hz mode.   
 
 
