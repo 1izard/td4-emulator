@@ -15,11 +15,11 @@ INSTRUCTIONS = {
     'MOV': {
         'A': {
             'Im': (False, False, True, True),
-            'B': (False, False, False, True) + tuple(False for _ in range(4))
+            'B': (False, False, False, True) + (False, ) * 4,
         },
         'B': {
             'Im': (False, True, True, True),
-            'A': (False, True, False, False) + tuple(False for _ in range(4))
+            'A': (False, True, False, False) + (False, ) * 4,
         }
     },
     'ADD': {
@@ -31,18 +31,18 @@ INSTRUCTIONS = {
         }
     },
     'IN': {
-        'A': (False, False, True, False) + tuple(False for _ in range(4)),
-        'B': (False, True, True, False) + tuple(False for _ in range(4))
+        'A': (False, False, True, False) + (False, ) * 4,
+        'B': (False, True, True, False) + (False, ) * 4,
     },
     'OUT': {
         'Im': (True, False, True, True),
-        'B': (True, True, False, True) + tuple(False for _ in range(4))
+        'B': (True, True, False, True) + (False, ) * 4,
     },
     'JMP': {
-        'Im': (True, True, True, True)
+        'Im': (True, True, True, True),
     },
     'JNC': {
-        'Im': (True, True, True, False)
+        'Im': (True, True, True, False),
     }
 }
 
