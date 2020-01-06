@@ -303,7 +303,3 @@ class TestUnits(unittest.TestCase):
         actual = ROM(arg)
         expected = _arg[11]
         assert_array_equal(expected, actual)
-
-
-if __name__ == '_main__':
-    unittest.main()

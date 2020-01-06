@@ -280,14 +280,14 @@ def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
         while True:
             dm = ui.debug_menu()
             if dm is DebugMenu.NEXT:
-                ck, reset = True, True
+                ck, reset_ = True, True
             elif dm is DebugMenu.RESET:
-                ck, reset = True, False
+                ck, reset_ = True, False
             elif dm is DebugMenu.STOP:
-                ck, reset = False, True
+                ck, reset_ = False, True
             else:
                 raise ValueError('Undefined debug menu is selected')
-            yield ck, reset
+            yield ck, reset_
 
     if cc in (ClockCycle.NORMAL, ClockCycle.HIGH):
         return _AUTO_CLOCK_GENERATOR()
