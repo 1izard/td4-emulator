@@ -273,8 +273,8 @@ def build_CLOCK_GENERATOR(cc: ClockCycle) -> Callable[[], Tuple[bool, bool]]:
     def _AUTO_CLOCK_GENERATOR():
         while True:
             time.sleep(1 / cc.value)
-            clock, reset = True, True
-            yield clock, reset
+            ck, reset_ = True, True
+            yield ck, reset_
 
     def _MANUAL_CLOCK_GENERATOR():
         while True:
