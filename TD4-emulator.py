@@ -31,11 +31,13 @@ def run_TD4(cc: ClockCycle):
         REGISTER_B.send((load1_, sum_arr))
         REGISTER_C.send((load2_, sum_arr))
         PC.send((load3_, sum_arr))
-        units.DISPLAY(cc, **{
-            'step': step, 'PC': utils.ba2str(q_PC[::-1]), 'output': utils.ba2str(q_c_out[::-1]),
-            'REGISTER_A': utils.ba2str(q_a[::-1]), 'REGISTER_B': utils.ba2str(q_b[::-1]), 'c_flag': int(c_flag),
-            'fetched_op': utils.ba2str(op_arr[::-1]), 'decode_res': utils.ba2str(decoded_arr), 'MUX_res': utils.ba2str(selected_arr[::-1]),
-            'carry': int(c), 'ALU_res': utils.ba2str(sum_arr)})
+        units.DISPLAY(cc,
+                      step=step, PC=utils.ba2str(q_PC[::-1]), output=utils.ba2str(q_c_out[::-1]),
+                      REGISTER_A=utils.ba2str(q_a[::-1]), REGISTER_B=utils.ba2str(q_b[::-1]),
+                      c_flag=int(c_flag), fetched_op=utils.ba2str(op_arr[::-1]),
+                      decode_res=utils.ba2str(decoded_arr),
+                      MUX_res=utils.ba2str(selected_arr[::-1]),
+                      carry=int(c), ALU_res=utils.ba2str(sum_arr))
         step += 1
 
 
